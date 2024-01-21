@@ -18,7 +18,7 @@ spec:
     - ReadWriteMany
   # Specify the path to persistent the volumes
   hostPath:
-    path: "/data/db"
+    path: "/data/friendify/db"
 ---
 apiVersion: v1
 # define a resource for volume chain
