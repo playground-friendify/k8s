@@ -46,7 +46,7 @@ spec:
     - protocol: TCP
       port: 6379
       name: redis-backend
-      nodePort: 30001
+      nodePort: 30101
     - protocol: TCP
       port: 8001
       name: redis-manager
