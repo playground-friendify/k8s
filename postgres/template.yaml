@@ -103,7 +103,7 @@ spec:
     # The port number to expose the service
     - protocol: TCP
       port: 5432
-      nodePort: 30005
+      nodePort: 30105
   # Pod to route service traffic
   selector:
     app: postgresdb
