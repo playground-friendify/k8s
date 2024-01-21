@@ -4,7 +4,7 @@ kind: PersistentVolume
 metadata:
   # Name the persistent chain
   name: postgresdb-persistent-volume
-  # Labels for identifying PV
+  namespace: friendify
   labels:
     type: local
     app: postgresdb
@@ -26,6 +26,7 @@ kind: PersistentVolumeClaim
 metadata:
   # Name the volume chain
   name: db-persistent-volume-claim
+  namespace: friendify
 spec:
   storageClassName: manual
   accessModes:
@@ -43,6 +44,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgresdb
+  namespace: friendify
   labels:
     external: "true"
 spec:
@@ -91,6 +93,7 @@ kind: Service
 metadata:
   # Name your service
   name: postgres
+  namespace: friendify
   labels:
     app: postgresdb
 spec:

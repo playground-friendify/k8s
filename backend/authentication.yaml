@@ -1,0 +1,49 @@
+# Kubernetes API version
+apiVersion: apps/v1
+# Deployment object
+kind: Deployment
+metadata:
+  name: authentication-service
+spec:
+  replicas: 1
+  selector:
+    # labels the pods
+    matchLabels:
+      app: crm
+  template:
+    metadata:
+      labels:
+        # The label the pods created from the pod template should have
+        app: crm
+        name: authentication-service
+    spec:
+      containers:
+        # The container name to execute pods
+        - name: authentication-service
+          image: "11112003/crm-authentication:master"
+          envFrom:
+            - configMapRef:
+                name: "crm-env"
+          ports:
+            # Assign ports to expose container
+            - containerPort: 8080
+---
+apiVersion: v1
+# Kind for service
+kind: Service
+metadata:
+  # Name your service
+  name: authentication-service
+  labels:
+    app: crm
+spec:
+  # Choose how to expose your service
+  ports:
+    # The port number to expose the service
+    - protocol: TCP
+      port: 8080
+
+  # Pod to route service traffic
+  selector:
+    app: crm
+    name: authentication-service
