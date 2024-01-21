@@ -7,6 +7,7 @@ metadata:
   name: redis
   labels:
     external: "true"
+  namespace: friendify
 spec:
   replicas: 1
   selector:
@@ -35,6 +36,7 @@ kind: Service
 metadata:
   # Name your service
   name: redis
+  namespace: friendify
   labels:
     app: redis
 spec:
@@ -57,6 +59,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: redis-manager
+  namespace: friendify
   labels:
     name: redis-manager
   annotations:
@@ -79,4 +82,3 @@ spec:
                 name: redis
                 port:
                   number: 8001
-
