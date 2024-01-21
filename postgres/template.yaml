@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   # Name the persistent chain
-  name: postgresdb-persistent-volume
+  name: postgresdb-persistent-volume-friendify
   namespace: friendify
   labels:
     type: local
@@ -18,7 +18,7 @@ spec:
     - ReadWriteMany
   # Specify the path to persistent the volumes
   hostPath:
-    path: "/data/friendify/db"
+    path: "/data/friendify"
 ---
 apiVersion: v1
 # define a resource for volume chain
