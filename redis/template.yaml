@@ -1,0 +1,82 @@
+# Kubernetes API version
+apiVersion: apps/v1
+# Deployment object
+kind: Deployment
+metadata:
+  # The name of the Deployment
+  name: redis
+  labels:
+    external: "true"
+spec:
+  replicas: 1
+  selector:
+    # labels the pods
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        # The label the pods created from the pod template should have
+        app: redis
+    spec:
+      containers:
+        # The container name to execute pods
+        - name: redis
+          # pull postgresimage from docker hub
+          image: redis/redis-stack:latest
+          ports:
+            # Assign ports to expose container
+            - containerPort: 6379
+            - containerPort: 8001
+---
+apiVersion: v1
+# Kind for service
+kind: Service
+metadata:
+  # Name your service
+  name: redis
+  labels:
+    app: redis
+spec:
+  type: NodePort
+  ports:
+    # The port number to expose the service
+    - protocol: TCP
+      port: 6379
+      name: redis-backend
+      nodePort: 30001
+    - protocol: TCP
+      port: 8001
+      name: redis-manager
+
+  # Pod to route service traffic
+  selector:
+    app: redis
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: redis-manager
+  labels:
+    name: redis-manager
+  annotations:
+    cert-manager.io/issuer: "crm-issuer"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+    - hosts:
+        - redis.relationc.com
+      secretName: redis-manager-ssl
+  rules:
+    - host: "redis.relationc.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: redis
+                port:
+                  number: 8001
+

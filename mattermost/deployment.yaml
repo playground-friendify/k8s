@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mattermost
+spec:
+  selector:
+    matchLabels:
+      app: mattermost
+  template:
+    metadata:
+      labels:
+        app: mattermost
+        name: mattermost
+    spec:
+      containers:
+        - name: mattermost
+          image: mattermost/mattermost-enterprise-edition:release-9.3
+          ports:
+            - containerPort: 8065
+          envFrom:
+            - configMapRef:
+                name: mattermost-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mattermost
+spec:
+  selector:
+    app: mattermost
+    name: mattermost
+  ports:
+    - port: 8065
+      targetPort: 8065
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mattermost
+  namespace: default
+  annotations:
+    cert-manager.io/issuer: "crm-issuer"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+    - hosts:
+        - mattermost.relationc.com
+      secretName: mattermost-ssl
+  rules:
+  - host: mattermost.relationc.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mattermost
+            port:
+              number: 8065
+---
+

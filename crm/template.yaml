@@ -1,0 +1,50 @@
+# Kubernetes API version
+apiVersion: apps/v1
+# Deployment object
+kind: Deployment
+metadata:
+  name: $NAME
+spec:
+  replicas: 1
+  selector:
+    # labels the pods
+    matchLabels:
+      app: crm
+  template:
+    metadata:
+      labels:
+        # The label the pods created from the pod template should have
+        app: crm
+        name: $NAME
+    spec:
+      containers:
+        # The container name to execute pods
+        - name: products
+          image: ghcr.io/hoaian-crm/$NAME:master
+          envFrom:
+            - configMapRef:
+                name: "crm-env"
+          ports:
+            - containerPort: 3000 # Node port
+          imagePullPolicy: Always
+---
+apiVersion: v1
+# Kind for service
+kind: Service
+metadata:
+  # Name your service
+  name: $NAME
+  labels:
+    app: crm
+spec:
+  # Choose how to expose your service
+  ports:
+    # The port number to expose the service
+    - protocol: TCP
+      port: 3000
+      name: http
+  # Pod to route service traffic
+  selector:
+    app: crm
+    name: $NAME
+

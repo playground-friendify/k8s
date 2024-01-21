@@ -1,0 +1,40 @@
+# Kubernetes API version
+apiVersion: apps/v1
+# Deployment object
+kind: Deployment
+metadata:
+  name: customer
+spec:
+  replicas: 1
+  selector:
+    # labels the pods
+    matchLabels:
+      app: crm
+  template:
+    metadata:
+      labels:
+        # The label the pods created from the pod template should have
+        app: crm
+        name: customer
+    spec:
+      containers:
+        # The container name to execute pods
+        - name: customer
+          image: "11112003/crm-customer:master"
+          envFrom:
+            - configMapRef:
+                name: "crm-env"
+          ports:
+            - containerPort: 3000 # Node port
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+spec:
+  selector:
+    app: crm
+    name: customer
+  ports:
+    - port: 3000

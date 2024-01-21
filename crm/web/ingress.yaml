@@ -1,0 +1,49 @@
+# Https ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  annotations:
+    cert-manager.io/issuer: "crm-issuer"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    # traefik.ingress.kubernetes.io/router.middlewares: default-redirect@kubernetescrd
+
+spec:
+  tls:
+    - hosts:
+        - relationc.com
+      secretName: crm-web-ssl
+  rules:
+    - host: relationc.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80
+# Http ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-redirect
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect@kubernetescrd
+
+spec:
+  rules:
+    - host: relationc.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80

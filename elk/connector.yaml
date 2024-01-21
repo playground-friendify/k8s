@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastic-connector
+spec:
+  selector:
+    matchLabels:
+      app: elastic-connector
+  template:
+    metadata:
+      labels:
+        app: elastic-connector
+    spec:
+      containers:
+        - name: elastic-connector
+          image: 11112003/crm-connector:latest
+          command:
+            - /app/bin/elastic-ingest
+            - -c
+            - /config/config.yaml
+          imagePullPolicy: Always

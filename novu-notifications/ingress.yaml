@@ -1,0 +1,80 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboar-notifications
+  labels:
+    name: dashboar-notifications
+  annotations:
+    cert-manager.io/issuer: "novu-crm-issuer"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+    - hosts:
+        - dashboard.notifications.relationc.com
+      secretName: dashboard-notifications-ssl
+  rules:
+    - host: dashboard.notifications.relationc.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: novu-web
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-notifications
+  labels:
+    name: api-notifications
+  annotations:
+    cert-manager.io/issuer: "novu-crm-issuer"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+    - hosts:
+        - api.notifications.relationc.com
+      secretName: api-notifications-ssl
+  rules:
+    - host: api.notifications.relationc.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: novu-api
+                port:
+                  number: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ws-notifications
+  labels:
+    name: ws-notifications
+  annotations:
+    cert-manager.io/issuer: "crm-issuer"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+    - hosts:
+        - ws.notifications.relationc.com
+      secretName: ws-notifications-ssl
+  rules:
+    - host: ws.notifications.relationc.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: novu-ws
+                port:
+                  number: 3002

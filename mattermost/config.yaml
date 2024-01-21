@@ -1,0 +1,17 @@
+apiVersion: v1
+# Kind for kubernets ConfigMap
+kind: ConfigMap
+metadata:
+  # Name your ConfigMap
+  name: mattermost-config
+  labels:
+    app: mattermost
+data:
+  # User DB
+  POSTGRES_DB: mattermost
+  # Db user
+  POSTGRES_USER: mmuser
+  # Db password
+  POSTGRES_PASSWORD: mmuser_password
+  MM_SQLSETTINGS_DRIVERNAME: postgres
+  MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:mmuser_password@mattermost-database:5432/mattermost?sslmode=disable&connect_timeout=10

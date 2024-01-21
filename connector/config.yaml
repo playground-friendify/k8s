@@ -1,0 +1,7 @@
+connectors:
+  - connector_id: "gyY6oYwB4zHsbhtJOLBG"
+    service_type: "postgresql"
+    api_key: "aENZNm9Zd0I0ekhzYmh0SlJyRHE6b05VS0VKanFUcEdHZm5LOGVDeURPQQ=="
+elasticsearch:
+  host: "https://relationc.com"
+  api_key: "aENZNm9Zd0I0ekhzYmh0SlJyRHE6b05VS0VKanFUcEdHZm5LOGVDeURPQQ=="
